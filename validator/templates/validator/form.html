@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>InputSense Validator</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap');
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Ambient blobs like iOS wallpaper */
+    body::before {
+      content: '';
+      position: fixed;
+      width: 600px;
+      height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(120, 80, 255, 0.35) 0%, transparent 70%);
+      top: -150px;
+      left: -150px;
+      pointer-events: none;
+      animation: float1 8s ease-in-out infinite;
+    }
+
+    body::after {
+      content: '';
+      position: fixed;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(0, 180, 255, 0.3) 0%, transparent 70%);
+      bottom: -100px;
+      right: -100px;
+      pointer-events: none;
+      animation: float2 10s ease-in-out infinite;
+    }
+
+    @keyframes float1 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(40px, 30px) scale(1.05); }
+    }
+
+    @keyframes float2 {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      50% { transform: translate(-30px, -40px) scale(1.08); }
+    }
+
+    /* Glassmorphism card */
+    .glass-card {
+      background: rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(28px) saturate(180%);
+      -webkit-backdrop-filter: blur(28px) saturate(180%);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 28px;
+      box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+      z-index: 10;
+      animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(30px) scale(0.97); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
+    }
+
+    /* Title */
+    .glass-card h1 {
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 1.75rem;
+      font-weight: 600;
+      letter-spacing: -0.5px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    /* Labels */
+    .field-label {
+      display: block;
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.4rem;
+    }
+
+    /* Glass inputs */
+    .glass-input {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    .glass-input::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    .glass-input:focus {
+      border-color: rgba(130, 110, 255, 0.7);
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 0 0 3px rgba(130, 110, 255, 0.2), 0 2px 12px rgba(130, 110, 255, 0.15);
+    }
+
+    /* Django form inputs override */
+    input[type="text"],
+    input[type="email"],
+    input[type="password"] {
+      width: 100%;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      color: rgba(255, 255, 255, 0.95);
+      font-size: 0.95rem;
+      outline: none;
+      transition: all 0.25s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+    }
+
+    input[type="text"]::placeholder,
+    input[type="email"]::placeholder,
+    input[type="password"]::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    input[type="text"]:focus,
+    input[type="email"]:focus,
+    input[type="password"]:focus {
+      border-color: rgba(130, 110, 255, 0.7);
+      background: rgba(255, 255, 255, 0.14);
+      box-shadow: 0 0 0 3px rgba(130, 110, 255, 0.2), 0 2px 12px rgba(130, 110, 255, 0.15);
+    }
+
+    /* Error text — targets Django default .errorlist ul/li too */
+    .error-text,
+    .error-text ul,
+    .error-text ul li,
+    .errorlist,
+    .errorlist li {
+      color: rgba(255, 120, 120, 0.9) !important;
+      font-size: 0.78rem;
+      margin-top: 0.3rem;
+      list-style: none;
+      padding: 0;
+      margin-left: 0;
+    }
+
+    /* Success banner */
+    .success-banner {
+      background: rgba(52, 211, 153, 0.15);
+      border: 1px solid rgba(52, 211, 153, 0.35);
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      color: rgba(167, 243, 208, 0.95);
+      font-size: 0.9rem;
+      margin-bottom: 1.25rem;
+    }
+
+    /* Submit button */
+    .glass-btn {
+      width: 100%;
+      padding: 0.85rem;
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, rgba(130, 90, 255, 0.85) 0%, rgba(70, 140, 255, 0.85) 100%);
+      color: white;
+      font-size: 1rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(100, 110, 255, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+    }
+
+    .glass-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(100, 110, 255, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+      background: linear-gradient(135deg, rgba(145, 105, 255, 0.95) 0%, rgba(80, 155, 255, 0.95) 100%);
+    }
+
+    .glass-btn:active {
+      transform: translateY(0px) scale(0.99);
+    }
+
+    /* Result pre block */
+    .glass-pre {
+      background: rgba(0, 0, 0, 0.25);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 14px;
+      padding: 1rem;
+      color: rgba(200, 230, 255, 0.85);
+      font-size: 0.8rem;
+      margin-top: 1.25rem;
+      overflow-x: auto;
+    }
+
+    /* Divider */
+    .glass-divider {
+      height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
+      margin: 1.25rem 0;
+    }
+
+    /* Field spacing */
+    .field-group {
+      margin-bottom: 1.1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Extra ambient blobs -->
+  <div style="position:fixed;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(255,100,180,0.2) 0%,transparent 70%);top:50%;left:20%;transform:translate(-50%,-50%);pointer-events:none;animation:float1 12s ease-in-out infinite;"></div>
+
+  <div class="glass-card">
+    <h1>Input Validator</h1>
+
+    <form method="post" style="display:flex;flex-direction:column;gap:0;">
+      {% csrf_token %}
+
+      <div class="field-group">
+        <label class="field-label">Name</label>
+        {{ form.name }}
+        <p class="error-text">{{ form.name.errors }}</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Email</label>
+        {{ form.email }}
+        <p class="error-text">{{ form.email.errors }}</p>
+      </div>
+
+      <div class="field-group">
+        <label class="field-label">Password</label>
+        {{ form.password }}
+        <p class="error-text">{{ form.password.errors }}</p>
+      </div>
+
+      {% if form.non_field_errors %}
+        <div class="error-text" style="margin-bottom:0.75rem;">
+          {{ form.non_field_errors }}
+        </div>
+      {% endif %}
+
+      <div class="glass-divider"></div>
+
+      <button type="submit" class="glass-btn">Validate</button>
+    </form>
+
+  </div>
+</body>
+</html>

@@ -1,16 +1,19 @@
-from django.http import JsonResponse
+from django.shortcuts import render, redirect
 from .forms import NameValidationForm
 
 def validate_name(request):
-  form = NameValidationForm(request.GET)
+  if request.method == "POST":
+    form = NameValidationForm(request.POST)
 
-  if form.is_valid():
-    return JsonResponse({
-      "status": "valid",
-      "clean_name": form.cleaned_data["name"]
-    })
+    if form.is_valid():
+      return redirect("success") 
+  else:
+    form = NameValidationForm()
 
-  return JsonResponse({
-    "status":"invalid",
-    "errors":form.errors
-  }, status=400)
+  return render(request,"validator/form.html",{
+    "form":form
+  }
+)
+
+def success(request):
+  return render(request, "validator/success.html")

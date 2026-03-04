@@ -55,13 +55,11 @@ class NameValidationForm(forms.Form):
         if not name or not password or not email:
             return cleaned_data  
 
-        # ❌ password should not contain the name
         if name.lower() in password.lower():
             raise forms.ValidationError(
                 "Password should not contain your name"
             )
 
-        # ❌ email username same as name
         email_username = email.split("@")[0]
         if email_username.lower() == name.lower():
             raise forms.ValidationError(
