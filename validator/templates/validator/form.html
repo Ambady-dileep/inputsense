@@ -6,33 +6,29 @@
   <title>InputSense Validator</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;500;600&display=swap');
-
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #1a1a2e 0%, #16213e 30%, #0f3460 60%, #533483 100%);
       position: relative;
       overflow: hidden;
+      padding: 1.25rem;
     }
 
-    /* Ambient blobs like iOS wallpaper */
     body::before {
       content: '';
       position: fixed;
-      width: 600px;
-      height: 600px;
+      width: clamp(300px, 50vw, 600px);
+      height: clamp(300px, 50vw, 600px);
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(120, 80, 255, 0.35) 0%, transparent 70%);
-      top: -150px;
-      left: -150px;
+      background: radial-gradient(circle, rgba(120,80,255,0.35) 0%, transparent 70%);
+      top: -150px; left: -150px;
       pointer-events: none;
       animation: float1 8s ease-in-out infinite;
     }
@@ -40,213 +36,283 @@
     body::after {
       content: '';
       position: fixed;
-      width: 500px;
-      height: 500px;
+      width: clamp(250px, 40vw, 500px);
+      height: clamp(250px, 40vw, 500px);
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(0, 180, 255, 0.3) 0%, transparent 70%);
-      bottom: -100px;
-      right: -100px;
+      background: radial-gradient(circle, rgba(0,180,255,0.3) 0%, transparent 70%);
+      bottom: -100px; right: -100px;
       pointer-events: none;
       animation: float2 10s ease-in-out infinite;
     }
 
     @keyframes float1 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(40px, 30px) scale(1.05); }
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%      { transform: translate(40px,30px) scale(1.05); }
     }
-
     @keyframes float2 {
-      0%, 100% { transform: translate(0, 0) scale(1); }
-      50% { transform: translate(-30px, -40px) scale(1.08); }
+      0%,100% { transform: translate(0,0) scale(1); }
+      50%      { transform: translate(-30px,-40px) scale(1.08); }
     }
 
-    /* Glassmorphism card */
+    /* ── Card ── */
     .glass-card {
-      background: rgba(255, 255, 255, 0.08);
+      background: rgba(255,255,255,0.08);
       backdrop-filter: blur(28px) saturate(180%);
       -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: clamp(18px, 4vw, 28px);
       box-shadow:
-        0 8px 32px rgba(0, 0, 0, 0.35),
-        inset 0 1px 0 rgba(255, 255, 255, 0.2),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.1);
-      padding: 2.5rem;
+        0 8px 32px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.2),
+        inset 0 -1px 0 rgba(0,0,0,0.1);
+      padding: clamp(1.25rem, 5vw, 2.5rem);
       width: 100%;
-      max-width: 420px;
+      max-width: 460px;
       position: relative;
       z-index: 10;
-      animation: slideUp 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+      animation: slideUp 0.5s cubic-bezier(0.34,1.56,0.64,1) both;
     }
 
     @keyframes slideUp {
       from { opacity: 0; transform: translateY(30px) scale(0.97); }
-      to { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* Title */
+    /* ── Title ── */
     .glass-card h1 {
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 1.75rem;
+      color: rgba(255,255,255,0.95);
+      font-size: clamp(1.3rem, 5vw, 1.75rem);
       font-weight: 600;
       letter-spacing: -0.5px;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.25rem;
       text-align: center;
     }
 
-    /* Labels */
+    /* ── Stats bar ── */
+    .stats-bar {
+      display: flex;
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .stat-pill {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.2rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: clamp(12px, 3vw, 16px);
+      padding: clamp(0.5rem, 2vw, 0.75rem) 0.5rem;
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+    }
+
+    .stat-label {
+      font-size: clamp(0.55rem, 1.8vw, 0.65rem);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: rgba(255,255,255,0.4);
+      text-align: center;
+    }
+
+    .stat-value {
+      font-size: clamp(1.1rem, 4vw, 1.4rem);
+      font-weight: 700;
+      letter-spacing: -0.5px;
+    }
+
+    .stat-value.score         { color: #ffd23f; text-shadow: 0 0 14px rgba(255,210,63,0.55); }
+    .stat-value.attempts-ok   { color: #4ade80; text-shadow: 0 0 14px rgba(74,222,128,0.55); }
+    .stat-value.attempts-warn { color: #fb923c; text-shadow: 0 0 14px rgba(251,146,60,0.55); }
+    .stat-value.attempts-out  { color: #f87171; text-shadow: 0 0 14px rgba(248,113,113,0.55); }
+
+    .attempt-dots {
+      display: flex;
+      gap: 4px;
+      margin-top: 3px;
+    }
+
+    .attempt-dot {
+      width: clamp(5px, 1.5vw, 7px);
+      height: clamp(5px, 1.5vw, 7px);
+      border-radius: 50%;
+    }
+
+    .attempt-dot.used { background: #f87171; box-shadow: 0 0 6px rgba(248,113,113,0.8); }
+    .attempt-dot.left { background: #4ade80; box-shadow: 0 0 6px rgba(74,222,128,0.8); }
+
+    /* ── Locked banner ── */
+    .locked-banner {
+      background: rgba(248,113,113,0.12);
+      border: 1px solid rgba(248,113,113,0.3);
+      border-radius: 14px;
+      padding: 0.75rem 1rem;
+      color: rgba(255,180,180,0.95);
+      font-size: clamp(0.78rem, 2.5vw, 0.88rem);
+      margin-bottom: 1.25rem;
+      text-align: center;
+      line-height: 1.5;
+    }
+
+    /* ── Labels ── */
     .field-label {
       display: block;
-      font-size: 0.78rem;
+      font-size: clamp(0.68rem, 2vw, 0.78rem);
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.55);
+      color: rgba(255,255,255,0.55);
       text-transform: uppercase;
       letter-spacing: 0.08em;
       margin-bottom: 0.4rem;
     }
 
-    /* Glass inputs */
-    .glass-input {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      border-radius: 14px;
-      padding: 0.75rem 1rem;
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 0.95rem;
-      outline: none;
-      transition: all 0.25s ease;
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-    }
-
-    .glass-input::placeholder {
-      color: rgba(255, 255, 255, 0.3);
-    }
-
-    .glass-input:focus {
-      border-color: rgba(130, 110, 255, 0.7);
-      background: rgba(255, 255, 255, 0.14);
-      box-shadow: 0 0 0 3px rgba(130, 110, 255, 0.2), 0 2px 12px rgba(130, 110, 255, 0.15);
-    }
-
-    /* Django form inputs override */
+    /* ── Inputs ── */
     input[type="text"],
     input[type="email"],
     input[type="password"] {
       width: 100%;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
       border-radius: 14px;
-      padding: 0.75rem 1rem;
-      color: rgba(255, 255, 255, 0.95);
-      font-size: 0.95rem;
+      padding: clamp(0.6rem, 2.5vw, 0.75rem) 1rem;
+      color: rgba(255,255,255,0.95);
+      font-size: clamp(0.85rem, 3vw, 0.95rem);
       outline: none;
       transition: all 0.25s ease;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
+      /* Prevent zoom on iOS when font-size < 16px */
+      -webkit-text-size-adjust: 100%;
     }
 
     input[type="text"]::placeholder,
     input[type="email"]::placeholder,
-    input[type="password"]::placeholder {
-      color: rgba(255, 255, 255, 0.3);
-    }
+    input[type="password"]::placeholder { color: rgba(255,255,255,0.3); }
 
     input[type="text"]:focus,
     input[type="email"]:focus,
     input[type="password"]:focus {
-      border-color: rgba(130, 110, 255, 0.7);
-      background: rgba(255, 255, 255, 0.14);
-      box-shadow: 0 0 0 3px rgba(130, 110, 255, 0.2), 0 2px 12px rgba(130, 110, 255, 0.15);
+      border-color: rgba(130,110,255,0.7);
+      background: rgba(255,255,255,0.14);
+      box-shadow: 0 0 0 3px rgba(130,110,255,0.2), 0 2px 12px rgba(130,110,255,0.15);
     }
 
-    /* Error text — targets Django default .errorlist ul/li too */
+    /* ── Errors ── */
     .error-text,
     .error-text ul,
     .error-text ul li,
     .errorlist,
     .errorlist li {
-      color: rgba(255, 120, 120, 0.9) !important;
-      font-size: 0.78rem;
+      color: rgba(255,120,120,0.9) !important;
+      font-size: clamp(0.7rem, 2vw, 0.78rem);
       margin-top: 0.3rem;
       list-style: none;
       padding: 0;
       margin-left: 0;
+      line-height: 1.5;
     }
 
-    /* Success banner */
-    .success-banner {
-      background: rgba(52, 211, 153, 0.15);
-      border: 1px solid rgba(52, 211, 153, 0.35);
-      border-radius: 14px;
-      padding: 0.75rem 1rem;
-      color: rgba(167, 243, 208, 0.95);
-      font-size: 0.9rem;
-      margin-bottom: 1.25rem;
-    }
-
-    /* Submit button */
-    .glass-btn {
-      width: 100%;
-      padding: 0.85rem;
-      border-radius: 14px;
-      border: none;
-      background: linear-gradient(135deg, rgba(130, 90, 255, 0.85) 0%, rgba(70, 140, 255, 0.85) 100%);
-      color: white;
-      font-size: 1rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      box-shadow: 0 4px 20px rgba(100, 110, 255, 0.35), inset 0 1px 0 rgba(255,255,255,0.2);
-      backdrop-filter: blur(8px);
-    }
-
-    .glass-btn:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 8px 28px rgba(100, 110, 255, 0.5), inset 0 1px 0 rgba(255,255,255,0.2);
-      background: linear-gradient(135deg, rgba(145, 105, 255, 0.95) 0%, rgba(80, 155, 255, 0.95) 100%);
-    }
-
-    .glass-btn:active {
-      transform: translateY(0px) scale(0.99);
-    }
-
-    /* Result pre block */
-    .glass-pre {
-      background: rgba(0, 0, 0, 0.25);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 14px;
-      padding: 1rem;
-      color: rgba(200, 230, 255, 0.85);
-      font-size: 0.8rem;
-      margin-top: 1.25rem;
-      overflow-x: auto;
-    }
-
-    /* Divider */
+    /* ── Divider ── */
     .glass-divider {
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
       margin: 1.25rem 0;
     }
 
-    /* Field spacing */
-    .field-group {
-      margin-bottom: 1.1rem;
+    /* ── Field spacing ── */
+    .field-group { margin-bottom: 1rem; }
+
+    /* ── Button ── */
+    .glass-btn {
+      width: 100%;
+      padding: clamp(0.7rem, 3vw, 0.85rem);
+      border-radius: 14px;
+      border: none;
+      background: linear-gradient(135deg, rgba(130,90,255,0.85) 0%, rgba(70,140,255,0.85) 100%);
+      color: white;
+      font-size: clamp(0.9rem, 3vw, 1rem);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 20px rgba(100,110,255,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
+      /* Prevent tap highlight on mobile */
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .glass-btn:hover:not(:disabled) {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 28px rgba(100,110,255,0.5), inset 0 1px 0 rgba(255,255,255,0.2);
+      background: linear-gradient(135deg, rgba(145,105,255,0.95) 0%, rgba(80,155,255,0.95) 100%);
+    }
+
+    .glass-btn:active:not(:disabled) { transform: scale(0.99); }
+
+    .glass-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+      background: linear-gradient(135deg, rgba(100,100,120,0.6) 0%, rgba(80,80,110,0.6) 100%);
+      box-shadow: none;
+    }
+
+    /* ── Small phones (≤360px) ── */
+    @media (max-width: 360px) {
+      body { padding: 0.75rem; }
+      .glass-card { border-radius: 20px; }
+      .stats-bar { gap: 0.5rem; }
+    }
+
+    /* ── Landscape on small phones ── */
+    @media (max-height: 500px) and (orientation: landscape) {
+      body { align-items: flex-start; padding: 0.75rem; }
+      .glass-card { max-width: 100%; }
+      .stats-bar { margin-bottom: 0.75rem; }
+      .field-group { margin-bottom: 0.6rem; }
+      .glass-card h1 { margin-bottom: 0.75rem; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Extra ambient blobs -->
   <div style="position:fixed;width:350px;height:350px;border-radius:50%;background:radial-gradient(circle,rgba(255,100,180,0.2) 0%,transparent 70%);top:50%;left:20%;transform:translate(-50%,-50%);pointer-events:none;animation:float1 12s ease-in-out infinite;"></div>
 
   <div class="glass-card">
     <h1>Input Validator</h1>
 
-    <form method="post" style="display:flex;flex-direction:column;gap:0;">
+    <!-- Stats bar -->
+    <div class="stats-bar">
+      <div class="stat-pill">
+        <span class="stat-label">Score</span>
+        <span class="stat-value score">{{ score }}</span>
+      </div>
+
+      <div class="stat-pill">
+        <span class="stat-label">Attempts Left</span>
+        <span class="stat-value {% if attempts_left == 0 %}attempts-out{% elif attempts_left == 1 %}attempts-warn{% else %}attempts-ok{% endif %}">
+          {{ attempts_left }}
+        </span>
+        <div class="attempt-dots">
+          {% for i in "123" %}
+            {% if forloop.counter > attempts_left %}
+              <div class="attempt-dot used"></div>
+            {% else %}
+              <div class="attempt-dot left"></div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    {% if locked %}
+      <div class="locked-banner">
+        🚫 You've used all 3 attempts. Refreshing won't help.
+      </div>
+    {% endif %}
+
+    <form method="post" {% if locked %}style="pointer-events:none;"{% endif %}>
       {% csrf_token %}
 
       <div class="field-group">
@@ -275,9 +341,10 @@
 
       <div class="glass-divider"></div>
 
-      <button type="submit" class="glass-btn">Validate</button>
+      <button type="submit" class="glass-btn" {% if locked %}disabled{% endif %}>
+        {% if locked %}No Attempts Left{% else %}Validate{% endif %}
+      </button>
     </form>
-
   </div>
 </body>
 </html>

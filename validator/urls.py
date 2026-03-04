@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import validate_name, success
+from .views import validate_details, success
 
 urlpatterns=[
-  path("", validate_name,name = "validation"),
+  path("", validate_details,name = "validation"),
   path("success/", success, name ="success"),
 ]
