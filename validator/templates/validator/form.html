@@ -183,7 +183,6 @@
       transition: all 0.25s ease;
       backdrop-filter: blur(8px);
       -webkit-backdrop-filter: blur(8px);
-      /* Prevent zoom on iOS when font-size < 16px */
       -webkit-text-size-adjust: 100%;
     }
 
@@ -224,7 +223,7 @@
     /* ── Field spacing ── */
     .field-group { margin-bottom: 1rem; }
 
-    /* ── Button ── */
+    /* ── Validate button ── */
     .glass-btn {
       width: 100%;
       padding: clamp(0.7rem, 3vw, 0.85rem);
@@ -238,7 +237,6 @@
       cursor: pointer;
       transition: all 0.2s ease;
       box-shadow: 0 4px 20px rgba(100,110,255,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
-      /* Prevent tap highlight on mobile */
       -webkit-tap-highlight-color: transparent;
       touch-action: manipulation;
     }
@@ -258,7 +256,48 @@
       box-shadow: none;
     }
 
-    /* ── Small phones (≤360px) ── */
+    /* ── Reset button ── */
+    .reset-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      padding: clamp(0.65rem, 3vw, 0.78rem);
+      border-radius: 14px;
+      border: 1px solid rgba(255,100,100,0.3);
+      background: rgba(255,80,80,0.08);
+      color: rgba(255,160,160,0.9);
+      font-size: clamp(0.82rem, 2.5vw, 0.92rem);
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      -webkit-tap-highlight-color: transparent;
+      touch-action: manipulation;
+    }
+
+    .reset-btn:hover {
+      background: rgba(255,80,80,0.18);
+      border-color: rgba(255,100,100,0.55);
+      color: rgba(255,200,200,1);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 16px rgba(255,80,80,0.2);
+    }
+
+    .reset-btn:active { transform: scale(0.98); }
+
+    .reset-icon {
+      display: inline-block;
+      transition: transform 0.4s ease;
+      font-size: 1rem;
+    }
+
+    .reset-btn:hover .reset-icon { transform: rotate(-180deg); }
+
+    /* ── Small phones ── */
     @media (max-width: 360px) {
       body { padding: 0.75rem; }
       .glass-card { border-radius: 20px; }
@@ -288,7 +327,6 @@
         <span class="stat-label">Score</span>
         <span class="stat-value score">{{ score }}</span>
       </div>
-
       <div class="stat-pill">
         <span class="stat-label">Attempts Left</span>
         <span class="stat-value {% if attempts_left == 0 %}attempts-out{% elif attempts_left == 1 %}attempts-warn{% else %}attempts-ok{% endif %}">
@@ -312,7 +350,8 @@
       </div>
     {% endif %}
 
-    <form method="post" {% if locked %}style="pointer-events:none;"{% endif %}>
+    <!-- Validate form -->
+    <form method="post">
       {% csrf_token %}
 
       <div class="field-group">
@@ -341,10 +380,23 @@
 
       <div class="glass-divider"></div>
 
-      <button type="submit" class="glass-btn" {% if locked %}disabled{% endif %}>
+      <button
+        type="submit"
+        class="glass-btn"
+        {% if locked %}disabled style="pointer-events:none;"{% endif %}
+      >
         {% if locked %}No Attempts Left{% else %}Validate{% endif %}
       </button>
     </form>
+
+    <!-- Reset is a completely separate form — never affected by locked state -->
+    <form method="post" action="{% url 'reset' %}" style="margin-top:0.65rem;">
+      {% csrf_token %}
+      <button type="submit" class="reset-btn">
+        <span class="reset-icon">↺</span> Reset
+      </button>
+    </form>
+
   </div>
 </body>
 </html>

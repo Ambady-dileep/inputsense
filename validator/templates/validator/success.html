@@ -11,15 +11,16 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', sans-serif;
       min-height: 100vh;
+      min-height: 100dvh;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #0d0d1a 0%, #0f1f3d 35%, #1a0a2e 65%, #0d1f1a 100%);
       overflow: hidden;
       position: relative;
+      padding: 1.25rem;
     }
 
-    /* ── Ambient blobs ── */
     .blob {
       position: fixed;
       border-radius: 50%;
@@ -27,19 +28,19 @@
       filter: blur(2px);
     }
     .blob-1 {
-      width: 700px; height: 700px;
+      width: clamp(300px, 50vw, 700px); height: clamp(300px, 50vw, 700px);
       background: radial-gradient(circle, rgba(120,60,255,0.4) 0%, transparent 65%);
       top: -200px; left: -200px;
       animation: drift1 10s ease-in-out infinite;
     }
     .blob-2 {
-      width: 550px; height: 550px;
+      width: clamp(250px, 40vw, 550px); height: clamp(250px, 40vw, 550px);
       background: radial-gradient(circle, rgba(0,200,255,0.3) 0%, transparent 65%);
       bottom: -150px; right: -150px;
       animation: drift2 13s ease-in-out infinite;
     }
     .blob-3 {
-      width: 400px; height: 400px;
+      width: clamp(200px, 30vw, 400px); height: clamp(200px, 30vw, 400px);
       background: radial-gradient(circle, rgba(255,80,180,0.25) 0%, transparent 65%);
       top: 50%; left: 55%;
       animation: drift3 9s ease-in-out infinite;
@@ -66,8 +67,8 @@
       backdrop-filter: blur(32px) saturate(200%);
       -webkit-backdrop-filter: blur(32px) saturate(200%);
       border: 1px solid rgba(255,255,255,0.16);
-      border-radius: 36px;
-      padding: 3.5rem 3rem;
+      border-radius: clamp(22px, 5vw, 36px);
+      padding: clamp(2rem, 6vw, 3.5rem) clamp(1.5rem, 5vw, 3rem);
       width: 100%;
       max-width: 480px;
       text-align: center;
@@ -83,12 +84,12 @@
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* ── Trophy / star burst ── */
+    /* ── Trophy ── */
     .trophy-wrap {
       position: relative;
-      width: 110px;
-      height: 110px;
-      margin: 0 auto 1.8rem;
+      width: clamp(80px, 20vw, 110px);
+      height: clamp(80px, 20vw, 110px);
+      margin: 0 auto 1.5rem;
     }
 
     .trophy-ring {
@@ -103,9 +104,7 @@
       animation: spinRing 4s linear infinite;
     }
 
-    @keyframes spinRing {
-      to { transform: rotate(360deg); }
-    }
+    @keyframes spinRing { to { transform: rotate(360deg); } }
 
     .trophy-bg {
       position: absolute;
@@ -116,7 +115,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 3rem;
+      font-size: clamp(2rem, 6vw, 3rem);
       animation: trophyPop 0.7s cubic-bezier(0.34,1.76,0.64,1) 0.4s both;
     }
 
@@ -125,31 +124,28 @@
       to   { transform: scale(1) rotate(0deg); opacity: 1; }
     }
 
-    /* ── Sparkles around trophy ── */
     .sparkle {
       position: absolute;
-      width: 6px;
-      height: 6px;
+      width: 6px; height: 6px;
       border-radius: 50%;
-      background: white;
       opacity: 0;
       animation: sparklePulse 2.5s ease-in-out infinite;
     }
-    .sparkle:nth-child(1) { top: -4px;  left: 50%; transform: translateX(-50%); animation-delay: 0s; background: #ffd23f; }
-    .sparkle:nth-child(2) { top: 15%;   right: -4px; animation-delay: 0.4s; background: #ff6eb4; }
+    .sparkle:nth-child(1) { top: -4px;  left: 50%; transform: translateX(-50%); animation-delay: 0s;   background: #ffd23f; }
+    .sparkle:nth-child(2) { top: 15%;   right: -4px;                             animation-delay: 0.4s; background: #ff6eb4; }
     .sparkle:nth-child(3) { bottom: -4px; left: 50%; transform: translateX(-50%); animation-delay: 0.8s; background: #50c8ff; }
-    .sparkle:nth-child(4) { top: 15%;   left: -4px; animation-delay: 1.2s; background: #a78bfa; }
+    .sparkle:nth-child(4) { top: 15%;   left: -4px;                              animation-delay: 1.2s; background: #a78bfa; }
     .sparkle:nth-child(5) { top: 50%;   right: -6px; transform: translateY(-50%); animation-delay: 0.2s; background: #ffd23f; width:4px; height:4px; }
     .sparkle:nth-child(6) { top: 50%;   left: -6px;  transform: translateY(-50%); animation-delay: 0.6s; background: #50c8ff; width:4px; height:4px; }
 
     @keyframes sparklePulse {
-      0%,100% { opacity: 0; transform: scale(0.5) translateX(var(--tx,0)); }
-      50%      { opacity: 1; transform: scale(1.4) translateX(var(--tx,0)); }
+      0%,100% { opacity: 0; transform: scale(0.5); }
+      50%      { opacity: 1; transform: scale(1.4); }
     }
 
-    /* ── Main heading ── */
+    /* ── Heading ── */
     .congrats-text {
-      font-size: 2.6rem;
+      font-size: clamp(2rem, 7vw, 2.6rem);
       font-weight: 700;
       letter-spacing: -1px;
       line-height: 1.1;
@@ -157,38 +153,73 @@
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
-      animation: textShimmer 3s ease-in-out infinite, textIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
       background-size: 200% 200%;
+      animation: textShimmer 3s ease-in-out infinite, textIn 0.7s cubic-bezier(0.34,1.56,0.64,1) 0.3s both;
     }
 
     @keyframes textShimmer {
       0%,100% { background-position: 0% 50%; }
       50%      { background-position: 100% 50%; }
     }
-
     @keyframes textIn {
       from { opacity: 0; transform: translateY(20px) scale(0.95); }
       to   { opacity: 1; transform: translateY(0) scale(1); }
     }
 
-    /* ── Subtitle ── */
     .subtitle {
       color: rgba(255,255,255,0.6);
-      font-size: 1rem;
+      font-size: clamp(0.85rem, 2.5vw, 1rem);
       margin-top: 0.6rem;
-      letter-spacing: 0.02em;
       animation: fadeUp 0.6s ease 0.7s both;
     }
 
-    /* ── Divider ── */
     .glass-divider {
       height: 1px;
       background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent);
-      margin: 1.8rem 0;
+      margin: 1.5rem 0;
       animation: fadeUp 0.6s ease 0.9s both;
     }
 
-    /* ── Info pill ── */
+    /* ── Stats row: Score + Attempts Left ── */
+    .stats-row {
+      display: flex;
+      gap: 0.65rem;
+      margin-bottom: 1.25rem;
+      animation: fadeUp 0.6s ease 0.95s both;
+    }
+
+    .stat-pill {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.15rem;
+      background: rgba(255,255,255,0.07);
+      border: 1px solid rgba(255,255,255,0.14);
+      border-radius: 14px;
+      padding: 0.65rem 0.5rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .stat-label {
+      font-size: clamp(0.55rem, 1.8vw, 0.62rem);
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .stat-value {
+      font-size: clamp(1.1rem, 4vw, 1.35rem);
+      font-weight: 700;
+    }
+
+    .stat-value.score        { color: #ffd23f; text-shadow: 0 0 14px rgba(255,210,63,0.6); }
+    .stat-value.attempts-ok  { color: #4ade80; text-shadow: 0 0 14px rgba(74,222,128,0.6); }
+    .stat-value.attempts-low { color: #fb923c; text-shadow: 0 0 14px rgba(251,146,60,0.6); }
+    .stat-value.attempts-out { color: #f87171; text-shadow: 0 0 14px rgba(248,113,113,0.6); }
+
+    /* ── Status pill ── */
     .info-pill {
       display: inline-flex;
       align-items: center;
@@ -198,7 +229,7 @@
       border-radius: 100px;
       padding: 0.5rem 1.1rem;
       color: rgba(255,255,255,0.75);
-      font-size: 0.85rem;
+      font-size: clamp(0.78rem, 2.5vw, 0.85rem);
       animation: fadeUp 0.6s ease 1s both;
     }
 
@@ -219,13 +250,13 @@
     .cta-btn {
       display: block;
       width: 100%;
-      margin-top: 1.5rem;
-      padding: 0.9rem;
+      margin-top: 1.25rem;
+      padding: clamp(0.75rem, 3vw, 0.9rem);
       border-radius: 16px;
       border: none;
       background: linear-gradient(135deg, rgba(130,90,255,0.85), rgba(70,140,255,0.85));
       color: white;
-      font-size: 1rem;
+      font-size: clamp(0.9rem, 3vw, 1rem);
       font-weight: 600;
       letter-spacing: 0.02em;
       cursor: pointer;
@@ -233,6 +264,7 @@
       box-shadow: 0 4px 24px rgba(100,110,255,0.35), inset 0 1px 0 rgba(255,255,255,0.2);
       transition: all 0.22s ease;
       animation: fadeUp 0.6s ease 1.1s both;
+      -webkit-tap-highlight-color: transparent;
     }
 
     .cta-btn:hover {
@@ -248,7 +280,7 @@
       to   { opacity: 1; transform: translateY(0); }
     }
 
-    /* ── Floating confetti particles ── */
+    /* ── Confetti ── */
     .confetti-wrap {
       position: fixed;
       inset: 0;
@@ -260,9 +292,6 @@
     .confetti-piece {
       position: absolute;
       top: -20px;
-      width: 8px;
-      height: 8px;
-      border-radius: 2px;
       opacity: 0;
       animation: confettiFall linear infinite;
     }
@@ -272,22 +301,22 @@
       80%  { opacity: 0.8; }
       100% { opacity: 0; transform: translateY(110vh) rotate(720deg) scale(0.5); }
     }
+
+    /* ── Small phones ── */
+    @media (max-width: 360px) {
+      body { padding: 0.75rem; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Ambient blobs -->
   <div class="blob blob-1"></div>
   <div class="blob blob-2"></div>
   <div class="blob blob-3"></div>
-
-  <!-- Confetti container (filled by JS) -->
   <div class="confetti-wrap" id="confetti"></div>
 
-  <!-- Glass card -->
   <div class="glass-card">
 
-    <!-- Trophy -->
     <div class="trophy-wrap">
       <div class="trophy-ring"></div>
       <div class="sparkle"></div>
@@ -299,45 +328,53 @@
       <div class="trophy-bg">🏆</div>
     </div>
 
-    <!-- Heading -->
     <div class="congrats-text">Congratulations!</div>
     <p class="subtitle">You've successfully validated your input.</p>
 
     <div class="glass-divider"></div>
 
-    <!-- Status pill -->
+    <!-- Live score + attempts from session -->
+    <div class="stats-row">
+      <div class="stat-pill">
+        <span class="stat-label">Score</span>
+        <span class="stat-value score">{{ score }}</span>
+      </div>
+      <div class="stat-pill">
+        <span class="stat-label">Attempts Left</span>
+        <span class="stat-value
+          {% if attempts_left == 0 %}attempts-out
+          {% elif attempts_left == 1 %}attempts-low
+          {% else %}attempts-ok{% endif %}">
+          {{ attempts_left }}
+        </span>
+      </div>
+    </div>
+
     <div class="info-pill">
       <span class="dot"></span>
       Validation Complete
     </div>
 
-    <!-- CTA -->
-    <a href="/" class="cta-btn">← Back to Home</a>
+    <!-- Fixed: uses Django URL tag instead of hardcoded "/" -->
+    <a href="{% url 'validation' %}" class="cta-btn">← Back to Home</a>
 
   </div>
 
   <script>
-    // Generate confetti
     const colors = ['#ffd23f','#ff6eb4','#50c8ff','#a78bfa','#4ade80','#fb923c'];
     const container = document.getElementById('confetti');
-    const count = 55;
-
-    for (let i = 0; i < count; i++) {
+    for (let i = 0; i < 55; i++) {
       const el = document.createElement('div');
       el.className = 'confetti-piece';
-
       const size = Math.random() * 8 + 5;
-      const isCircle = Math.random() > 0.5;
-
       el.style.cssText = `
         left: ${Math.random() * 100}%;
         width: ${size}px;
         height: ${size}px;
         background: ${colors[Math.floor(Math.random() * colors.length)]};
-        border-radius: ${isCircle ? '50%' : '2px'};
+        border-radius: ${Math.random() > 0.5 ? '50%' : '2px'};
         animation-duration: ${Math.random() * 5 + 4}s;
         animation-delay: ${Math.random() * 6}s;
-        opacity: 0;
       `;
       container.appendChild(el);
     }
