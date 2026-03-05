@@ -25,7 +25,7 @@ SECRET_KEY = "django-insecure-u&b9__$y#@(u88z_io16l-(t_oec&fcj(o(v16j-1j6oru9v+n
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ["inputsense.onrender.com"]
 
 
 # Application definition
